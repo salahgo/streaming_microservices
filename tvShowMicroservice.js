@@ -24,7 +24,7 @@ const tvShowService = {
       description: 'This is an example TV show.',
       // Add more TV show data fields as needed
     };
-    callback(null, tvShow);
+    callback(null, {tvShow});
   },
   searchTVShows: (call, callback) => {
     const { query } = call.request;
