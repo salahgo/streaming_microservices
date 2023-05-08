@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package movie;
+
+// Define the movie message
+message Movie {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  // Add more movie data fields as needed
+}
+
+// Define the request and response messages for movie service methods
+
+message GetMovieRequest {
+  string movie_id = 1;
+}
+
+message GetMovieResponse {
+  Movie movie = 1;
+}
+
+message SearchMoviesRequest {
+  string query = 1;
+}
+
+message SearchMoviesResponse {
+  repeated Movie movies = 1;
+}
+
+// Define the movie service
+service MovieService {
+  rpc GetMovie(GetMovieRequest) returns (GetMovieResponse);
+  rpc SearchMovies(SearchMoviesRequest) returns (SearchMoviesResponse);
+  // Add more methods as needed
+}
