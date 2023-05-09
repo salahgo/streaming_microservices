@@ -56,7 +56,7 @@ const resolvers = {
       // Make gRPC call to the TV show microservice
       const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
       return new Promise((resolve, reject) => {
-        client.getTVShow({ tvShowId: id }, (err, response) => {
+        client.getTvshow({ tvShowId: id }, (err, response) => {
           if (err) {
             reject(err);
           } else {
@@ -69,7 +69,7 @@ const resolvers = {
       // Make gRPC call to the TV show microservice
       const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
       return new Promise((resolve, reject) => {
-        client.searchTVShows({}, (err, response) => {
+        client.searchTvshows({}, (err, response) => {
           if (err) {
             reject(err);
           } else {

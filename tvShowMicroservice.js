@@ -16,20 +16,20 @@ const tvShowProto = grpc.loadPackageDefinition(tvShowProtoDefinition).tvShow;
 
 // Implement the TV show service
 const tvShowService = {
-  getTVShow: (call, callback) => {
+  getTvshow: (call, callback) => {
     // Retrieve TV show details from the database or any other data source
-    const tvShow = {
+    const tv_show = {
       id: call.request.tv_show_id,
       title: 'Example TV Show',
       description: 'This is an example TV show.',
       // Add more TV show data fields as needed
     };
-    callback(null, {tvShow});
+    callback(null, {tv_show});
   },
-  searchTVShows: (call, callback) => {
+  searchTvshows: (call, callback) => {
     const { query } = call.request;
     // Perform a search for TV shows based on the query
-    const tvShows = [
+    const tv_shows = [
       {
         id: '1',
         title: 'Example TV Show 1',
@@ -42,7 +42,7 @@ const tvShowService = {
       },
       // Add more TV show search results as needed
     ];
-    callback(null, { tvShows });
+    callback(null, { tv_shows });
   },
   // Add more methods as needed
 };

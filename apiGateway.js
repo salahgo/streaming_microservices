@@ -74,7 +74,7 @@ app.get('/movies', (req, res) => {
   
   app.get('/tvshows', (req, res) => {
     const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
-    client.searchTVShows({}, (err, response) => {
+    client.searchTvshows({}, (err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -86,7 +86,7 @@ app.get('/movies', (req, res) => {
   app.get('/tvshows/:id', (req, res) => {
     const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
     const id = req.params.id;
-    client.getTVShow({ tvShowId: id }, (err, response) => {
+    client.getTvshow({ tvShowId: id }, (err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {

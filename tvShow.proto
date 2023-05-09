@@ -30,7 +30,7 @@ message SearchTVShowsResponse {
 
 // Define the TV show service
 service TVShowService {
-  rpc GetTVShow(GetTVShowRequest) returns (GetTVShowResponse);
-  rpc SearchTVShows(SearchTVShowsRequest) returns (SearchTVShowsResponse);
+  rpc GetTvshow(GetTVShowRequest) returns (GetTVShowResponse);
+  rpc SearchTvshows(SearchTVShowsRequest) returns (SearchTVShowsResponse);
   // Add more methods as needed
 }
