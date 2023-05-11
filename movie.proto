@@ -2,15 +2,15 @@ syntax = "proto3";
 
 package movie;
 
-// Define the movie message
+
 message Movie {
   string id = 1;
   string title = 2;
   string description = 3;
-  // Add more movie data fields as needed
+
 }
 
-// Define the request and response messages for movie service methods
+
 
 message GetMovieRequest {
   string movie_id = 1;
@@ -28,9 +28,18 @@ message SearchMoviesResponse {
   repeated Movie movies = 1;
 }
 
-// Define the movie service
+message CreateMovieRequest {
+  string movie_id = 1;
+  string title = 2;
+  string description = 3;
+}
+
+message CreateMovieResponse {
+  Movie movie = 1;
+}
+
 service MovieService {
   rpc GetMovie(GetMovieRequest) returns (GetMovieResponse);
   rpc SearchMovies(SearchMoviesRequest) returns (SearchMoviesResponse);
-  // Add more methods as needed
+  rpc CreateMovie(CreateMovieRequest) returns (CreateMovieResponse);
 }

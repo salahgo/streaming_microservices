@@ -1,4 +1,4 @@
-// apiGateway.js
+
 
 const express = require('express');
 const { ApolloServer } = require('@apollo/server');
@@ -8,15 +8,16 @@ const cors = require('cors');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
-// Load the movie and TV show proto files
+
 const movieProtoPath = 'movie.proto';
 const tvShowProtoPath = 'tvShow.proto';
 
 const resolvers = require('./resolvers');
 const typeDefs = require('./schema');
 
-// Create a new Express application
+
 const app = express();
+app.use(bodyParser.json());
 
 const movieProtoDefinition = protoLoader.loadSync(movieProtoPath, {
     keepCase: true,
@@ -34,12 +35,14 @@ const movieProtoDefinition = protoLoader.loadSync(movieProtoPath, {
   });
   const movieProto = grpc.loadPackageDefinition(movieProtoDefinition).movie;
   const tvShowProto = grpc.loadPackageDefinition(tvShowProtoDefinition).tvShow;
+  const clientMovies = new movieProto.MovieService('localhost:50051', grpc.credentials.createInsecure());
+  const clientTVShows = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
+
   
 
-// Create an ApolloServer instance with the imported schema and resolvers
+
 const server = new ApolloServer({ typeDefs, resolvers });
 
-// Apply the ApolloServer middleware to the Express application
 server.start().then(() => {
     app.use(
         cors(),
@@ -50,8 +53,7 @@ server.start().then(() => {
 
 
 app.get('/movies', (req, res) => {
-    const client = new movieProto.MovieService('localhost:50051', grpc.credentials.createInsecure());
-    client.searchMovies({}, (err, response) => {
+  clientMovies.searchMovies({}, (err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -59,11 +61,21 @@ app.get('/movies', (req, res) => {
       }
     });
   });
+
+  app.post('/movie', (req, res) => {
+    const {id, title, description} = req.body;    
+    clientMovies.createMovie({movie_id: id, title: title, description: description}, (err, response) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.json(response.movie);
+      }
+    });
+  })
   
   app.get('/movies/:id', (req, res) => {
-    const client = new movieProto.MovieService('localhost:50051', grpc.credentials.createInsecure());
     const id = req.params.id;
-    client.getMovie({ movieId: id }, (err, response) => {
+    clientMovies.getMovie({ movieId: id }, (err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -71,10 +83,11 @@ app.get('/movies', (req, res) => {
       }
     });
   });
+
+
   
   app.get('/tvshows', (req, res) => {
-    const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
-    client.searchTvshows({}, (err, response) => {
+    clientTVShows.searchTvshows({}, (err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -84,9 +97,8 @@ app.get('/movies', (req, res) => {
   });
   
   app.get('/tvshows/:id', (req, res) => {
-    const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
     const id = req.params.id;
-    client.getTvshow({ tvShowId: id }, (err, response) => {
+    clientTVShows.getTvshow({ tvShowId: id }, (err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -95,7 +107,7 @@ app.get('/movies', (req, res) => {
     });
   });
 
-// Start the Express application
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`API Gateway running on port ${port}`);

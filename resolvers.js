@@ -1,9 +1,9 @@
-// resolvers.js
+
 
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
-// Load the movie and TV show proto files
+
 const movieProtoPath = 'movie.proto';
 const tvShowProtoPath = 'tvShow.proto';
 const movieProtoDefinition = protoLoader.loadSync(movieProtoPath, {
@@ -22,15 +22,16 @@ const tvShowProtoDefinition = protoLoader.loadSync(tvShowProtoPath, {
 });
 const movieProto = grpc.loadPackageDefinition(movieProtoDefinition).movie;
 const tvShowProto = grpc.loadPackageDefinition(tvShowProtoDefinition).tvShow;
+const clientMovies = new movieProto.MovieService('localhost:50051', grpc.credentials.createInsecure());
+const clientTVShows = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
 
-// Define resolvers for GraphQL queries
+
 const resolvers = {
   Query: {
     movie: (_, { id }) => {
-      // Make gRPC call to the movie microservice
-      const client = new movieProto.MovieService('localhost:50051', grpc.credentials.createInsecure());
+
       return new Promise((resolve, reject) => {
-        client.getMovie({ movieId: id }, (err, response) => {
+        clientMovies.getMovie({ movieId: id }, (err, response) => {
           if (err) {
             reject(err);
           } else {
@@ -40,10 +41,10 @@ const resolvers = {
       });
     },
     movies: () => {
-      // Make gRPC call to the movie microservice
-      const client = new movieProto.MovieService('localhost:50051', grpc.credentials.createInsecure());
+
+
       return new Promise((resolve, reject) => {
-        client.searchMovies({}, (err, response) => {
+        clientMovies.searchMovies({}, (err, response) => {
           if (err) {
             reject(err);
           } else {
@@ -53,10 +54,9 @@ const resolvers = {
       });
     },
     tvShow: (_, { id }) => {
-      // Make gRPC call to the TV show microservice
-      const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
+   
       return new Promise((resolve, reject) => {
-        client.getTvshow({ tvShowId: id }, (err, response) => {
+        clientTVShows.getTvshow({ tvShowId: id }, (err, response) => {
           if (err) {
             reject(err);
           } else {
@@ -66,10 +66,9 @@ const resolvers = {
       });
     },
     tvShows: () => {
-      // Make gRPC call to the TV show microservice
-      const client = new tvShowProto.TVShowService('localhost:50052', grpc.credentials.createInsecure());
+    
       return new Promise((resolve, reject) => {
-        client.searchTvshows({}, (err, response) => {
+        clientTVShows.searchTvshows({}, (err, response) => {
           if (err) {
             reject(err);
           } else {
@@ -78,7 +77,21 @@ const resolvers = {
         });
       });
     },
+   
   },
+  Mutation: {
+    createMovie: (_, {id, title, description} ) => {
+      return new Promise((resolve, reject) => {
+        clientMovies.createMovie({movie_id: id, title: title, description: description}, (err, response) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(response.movie);
+          }
+        });
+      });
+    },
+  }
 };
 
 module.exports = resolvers;

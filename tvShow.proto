@@ -2,15 +2,13 @@ syntax = "proto3";
 
 package tvShow;
 
-// Define the TV show message
+
 message TVShow {
   string id = 1;
   string title = 2;
   string description = 3;
-  // Add more TV show data fields as needed
-}
 
-// Define the request and response messages for TV show service methods
+}
 
 message GetTVShowRequest {
   string tv_show_id = 1;
@@ -28,9 +26,8 @@ message SearchTVShowsResponse {
   repeated TVShow tv_shows = 1;
 }
 
-// Define the TV show service
 service TVShowService {
   rpc GetTvshow(GetTVShowRequest) returns (GetTVShowResponse);
   rpc SearchTvshows(SearchTVShowsRequest) returns (SearchTVShowsResponse);
-  // Add more methods as needed
+
 }

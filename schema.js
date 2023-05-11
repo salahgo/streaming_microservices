@@ -1,5 +1,5 @@
 const { gql } = require('@apollo/server');
-// Define GraphQL schema
+
 const typeDefs = `#graphql
   type Movie {
     id: String!
@@ -18,6 +18,9 @@ const typeDefs = `#graphql
     movies: [Movie]
     tvShow(id: String!): TVShow
     tvShows: [TVShow]
+  }
+  type Mutation {
+    createMovie(id: String!, title: String!, description:String!): Movie
   }
 `;
 
