@@ -1,0 +1,29 @@
+services:
+  api-gateway:
+    build:
+      context: ./apiGateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - movies
+      - tv-shows
+
+  movies:
+    build:
+      context: ./movies
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+
+
+  tv-shows:
+    build:
+      context: ./tvShows
+      dockerfile: Dockerfile
+    ports:
+      - "50052:50052"
+
+networks:
+  default:
+    driver: bridge
