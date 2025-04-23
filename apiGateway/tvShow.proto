@@ -29,5 +29,4 @@ message SearchTVShowsResponse {
 service TVShowService {
   rpc GetTvshow(GetTVShowRequest) returns (GetTVShowResponse);
   rpc SearchTvshows(SearchTVShowsRequest) returns (SearchTVShowsResponse);
-
 }

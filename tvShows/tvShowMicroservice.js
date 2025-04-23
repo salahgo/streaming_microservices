@@ -55,6 +55,5 @@ server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (er
     }
   
     console.log(`Server is running on port ${port}`);
-    server.start();
   });
 console.log(`TV show microservice running on port ${port}`);

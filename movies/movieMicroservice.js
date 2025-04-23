@@ -28,7 +28,7 @@ const movieService = {
     const movies = [
       {
         id: '1',
-        title: 'Example Movie 1',
+        title: 'This is Example Movie 1',
         description: 'This is the first example movie.',
       },
       {
@@ -64,6 +64,5 @@ server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (er
     }
   
     console.log(`Server is running on port ${port}`);
-    server.start();
   });
 console.log(`Movie microservice running on port ${port}`);
